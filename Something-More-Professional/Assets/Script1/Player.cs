@@ -4,17 +4,20 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float jumpSpeed = 100.0f;
-    private bool onGround = false;
-
     public float speed = 5f;
 
-    // Jump
+    // Jumping Variables
+    public float jumpForce = 3f;
+    private Rigidbody rb;
+
+    // Limiting height in jump
+    private float maxHeight = 3f;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        // Jumping
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -29,6 +32,18 @@ public class Player : MonoBehaviour
         // Move Right
         if(Input.GetKey(KeyCode.D)) {
             transform.position += new Vector3(speed * Time.deltaTime, 0f, 0f);
+        }
+
+        // Jump
+        if(Input.GetKey(KeyCode.W)) {
+
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            
+            if(transform.position.y > maxHeight) {
+                rb.velocity = new Vector3(rb.velocity.x, 0f);
+                transform.position = new Vector3(transform.position.x, maxHeight);
+            }
+
         }
 
     }
